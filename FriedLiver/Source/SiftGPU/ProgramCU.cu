@@ -989,13 +989,14 @@ void __global__ ComputeOrientation_Kernel(float4* d_list,
 			const unsigned int p = (tidx + 1) % 36;
 			target[tidx] = (source[m] + source[c] + source[p])*one_third;
 
-			__syncthreads();
+			//__syncthreads();
 			volatile float *tmp = source;
 			source = target;
 			target = tmp;
 		}
 
 	}
+	__syncthreads();
 
 	//		if (num_orientation == 1)
 	//		{
@@ -1033,9 +1034,9 @@ void __global__ ComputeOrientation_Kernel(float4* d_list,
 #pragma unroll
 	for (unsigned int stride = numWarps / 2; stride > 0; stride /= 2) {
 		if (tidx < stride) sMax[tidx] = max(sMax[tidx], sMax[tidx + stride]);
-		__syncthreads();
+		//__syncthreads();
 	}
-
+	__syncthreads();
 
 
 	max_vote = sMax[0];
@@ -1068,8 +1069,9 @@ void __global__ ComputeOrientation_Kernel(float4* d_list,
 				weightsIdx[tidx] = weightsIdx[tidx + stride];
 			}
 		}
-		__syncthreads();
+		//__syncthreads();
 	}
+	__syncthreads();
 
 	// 1st max compute based on idx
 	if (tidx == 0) {
@@ -1100,8 +1102,9 @@ void __global__ ComputeOrientation_Kernel(float4* d_list,
 	__syncthreads();
 	if (tidx == 0) {
 		weights[maxIndex] = -1.0f;
-		__syncthreads();
+		//__syncthreads();
 	}
+	__syncthreads();
 
 	// 2nd reduction to compute 2nd max weight
 	for (unsigned int stride = COMPUTE_ORIENTATION_BLOCK / 2; stride > 0; stride /= 2) {
@@ -1111,8 +1114,9 @@ void __global__ ComputeOrientation_Kernel(float4* d_list,
 				weightsIdx[tidx] = weightsIdx[tidx + stride];
 			}
 		}
-		__syncthreads();
+		//__syncthreads();
 	}
+	__syncthreads();
 	// 2nd max compute based on idx
 	if (tidx == 0) {
 		if (weights[0] != -1.0f) {
@@ -2117,5 +2121,6 @@ void ProgramCU::ConvertDescriptorToUChar(float* d_descriptorsFloat, unsigned int
 
 	ProgramCU::CheckErrorCUDA(__FUNCTION__);
 }
+
 
 
