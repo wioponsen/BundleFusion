@@ -1,3 +1,9 @@
+new feature: 
+
+support vs2019+CUDA(<=11.8)
+
+[how to](how_to.md) config with orignal project
+
 # BundleFusion
 
 ![BundleFusion](img/teaser.jpg)
