@@ -572,7 +572,19 @@ void MeshData<FloatType>::merge( const MeshData<FloatType>& other )
         return;
     }
 	if (isEmpty()) {
-		*this = other;
+		//*this = other;
+
+		m_Vertices = other.m_Vertices;
+		m_Normals = other.m_Normals;
+		m_TextureCoords = other.m_TextureCoords;
+		m_Colors = other.m_Colors;
+		m_FaceIndicesVertices = other.m_FaceIndicesVertices;
+		m_FaceIndicesNormals = other.m_FaceIndicesNormals;
+		m_FaceIndicesTextureCoords = other.m_FaceIndicesTextureCoords;
+		m_FaceIndicesColors = other.m_FaceIndicesColors;
+		m_materialFile = other.m_materialFile;
+		m_indicesByMaterial = other.m_indicesByMaterial;
+		m_indicesByGroup = other.m_indicesByGroup;
 		return;
 	}
 
